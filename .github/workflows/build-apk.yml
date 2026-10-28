@@ -142,6 +142,34 @@ jobs:
               print("Updated Kotlin plugin from 1.8.22 to 2.2.20")
           PY
           
+      - name: Fix Flutter CardTheme compatibility
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+
+          root = Path(os.environ["PROJECT_DIR"])
+          target = root / "lib" / "theme" / "app_theme.dart"
+
+          if not target.exists():
+              raise SystemExit(f"File not found: {target}")
+
+          text = target.read_text()
+          old = "cardTheme: CardTheme("
+          new = "cardTheme: CardThemeData("
+          count = text.count(old)
+
+          if count == 0:
+              if new in text:
+                  print("CardThemeData is already configured.")
+              else:
+                  raise SystemExit("Could not find cardTheme declaration.")
+          else:
+              target.write_text(text.replace(old, new))
+              print(f"Fixed CardTheme compatibility ({count} replacement).")
+          PY
+
       - name: Get Flutter dependencies
         run: cd "$PROJECT_DIR" && flutter pub get
 

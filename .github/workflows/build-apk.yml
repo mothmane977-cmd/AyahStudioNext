@@ -82,6 +82,18 @@ jobs:
           if not changed:
               raise SystemExit("Could not find AGP 8.1.0 in Gradle files")
           PY
+
+      - name: Inspect Kotlin configuration
+        shell: bash
+        run: |
+          echo "===== settings.gradle ====="
+          cat "$PROJECT_DIR/android/settings.gradle" || true
+          echo "===== settings.gradle.kts ====="
+          cat "$PROJECT_DIR/android/settings.gradle.kts" || true
+          echo "===== build.gradle ====="
+          cat "$PROJECT_DIR/android/build.gradle" || true
+          echo "===== build.gradle.kts ====="
+          cat "$PROJECT_DIR/android/build.gradle.kts" || true
           
       - name: Upgrade Kotlin version
         shell: bash

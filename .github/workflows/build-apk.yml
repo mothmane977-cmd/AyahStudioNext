@@ -130,7 +130,16 @@ jobs:
                   changed = True
 
           if not changed:
-              raise SystemExit("Could not find Kotlin version 2.0.0")
+              p = root / "settings.gradle"
+              text = p.read_text()
+              updated, count = re.subn(
+                  r'(id\s+["\']org\.jetbrains\.kotlin\.android["\']\s+version\s+["\'])1\.8\.22(["\'])',
+                  r'\g<1>2.2.20\g<2>', text
+              )
+              if count == 0:
+                  raise SystemExit("Could not find Kotlin plugin version 1.8.22")
+              p.write_text(updated)
+              print("Updated Kotlin plugin from 1.8.22 to 2.2.20")
           PY
           
       - name: Get Flutter dependencies

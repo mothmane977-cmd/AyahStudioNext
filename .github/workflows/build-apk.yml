@@ -83,6 +83,44 @@ jobs:
               raise SystemExit("Could not find AGP 8.1.0 in Gradle files")
           PY
           
+      - name: Upgrade Kotlin version
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import os
+          import re
+          from pathlib import Path
+
+          root = Path(os.environ["PROJECT_DIR"]) / "android"
+          files = [
+              root / "settings.gradle",
+              root / "settings.gradle.kts",
+              root / "build.gradle",
+              root / "build.gradle.kts",
+          ]
+
+          changed = False
+          for p in files:
+              if not p.exists():
+                  continue
+              text = p.read_text()
+              updated = re.sub(
+                  r'(?m)(org\.jetbrains\.kotlin\.android["\']?\s*\)?\s+version\s+["\'])2\.0\.0(["\'])',
+                  r'\g<1>2.2.20\g<2>', text
+              )
+              updated = re.sub(
+                  r'(?m)(kotlin_version\s*=\s*[\'"])2\.0\.0([\'"])',
+                  r'\g<1>2.2.20\g<2>', updated
+              )
+              if updated != text:
+                  p.write_text(updated)
+                  print(f"Updated Kotlin version in {p}")
+                  changed = True
+
+          if not changed:
+              raise SystemExit("Could not find Kotlin version 2.0.0")
+          PY
+          
       - name: Get Flutter dependencies
         run: cd "$PROJECT_DIR" && flutter pub get
 

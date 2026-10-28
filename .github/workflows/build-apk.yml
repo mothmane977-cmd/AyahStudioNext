@@ -44,6 +44,11 @@ jobs:
           fi
           echo "PROJECT_DIR=$PROJECT_DIR" >> "$GITHUB_ENV"
 
+      - name: Upgrade Gradle wrapper
+        shell: bash
+        run: |
+          sed -i 's#^distributionUrl=.*#distributionUrl=https\://services.gradle.org/distributions/gradle-8.14-all.zip#' "$PROJECT_DIR/android/gradle/wrapper/gradle-wrapper.properties"
+          
       - name: Get Flutter dependencies
         run: cd "$PROJECT_DIR" && flutter pub get
 

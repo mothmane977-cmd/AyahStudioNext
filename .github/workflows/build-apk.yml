@@ -31,7 +31,7 @@ jobs:
       - name: Extract Flutter project
         run: |
           mkdir -p project
-          unzip -q AyahStudioNext_Flutter_QUL_Audio_Player.zip -d project
+          unzip -q AyahStudioNext_Visual_Refresh_v2.zip -d project
           find project -name pubspec.yaml -print
 
       - name: Locate Flutter project

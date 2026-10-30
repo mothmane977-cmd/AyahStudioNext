@@ -6,7 +6,10 @@ on:
   push:
     branches:
       - main
-
+      
+permissions:
+  contents: write
+  
 jobs:
   build:
     name: Build Android APK
@@ -182,3 +185,10 @@ jobs:
           name: AyahStudioNext-debug-APK
           path: project/**/build/app/outputs/flutter-apk/app-debug.apk
           
+      - name: Publish APK as GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest-apk
+          name: AyahStudioNext Latest APK
+          files: project/**/build/app/outputs/flutter-apk/app-debug.apk
+          make_latest: true
